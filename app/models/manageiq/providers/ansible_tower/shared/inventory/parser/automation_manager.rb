@@ -5,6 +5,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
     configuration_scripts
     configuration_script_sources
     credentials
+    workflows
   end
 
   def inventory_root_groups
@@ -107,6 +108,16 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
       inventory_object.options = inventory_object.type.constantize::EXTRA_ATTRIBUTES.keys.each_with_object({}) do |k, h|
         h[k] = credential.try(k)
       end
+    end
+  end
+
+  def workflows
+    collector.workflow_job_templates.each do |job_template|
+      inventory_object = persister.workflows.find_or_build(job_template.id.to_s)
+      inventory_object.description = job_template.description
+      inventory_object.name = job_template.name
+      inventory_object.survey_spec = job_template.survey_spec_hash
+      inventory_object.variables = job_template.extra_vars_hash
     end
   end
 end
