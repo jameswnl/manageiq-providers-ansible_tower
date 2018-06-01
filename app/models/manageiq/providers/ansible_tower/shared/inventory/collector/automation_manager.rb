@@ -19,6 +19,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Collector::Automati
     connection.api.workflow_job_templates.all
   end
 
+  def workflow_job_template_nodes
+    connection.api.workflow_job_template_nodes.all
+  end
+
   def projects
     connection.api.projects.all
   end

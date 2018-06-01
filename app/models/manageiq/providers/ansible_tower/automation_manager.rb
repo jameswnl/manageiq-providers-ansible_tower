@@ -16,6 +16,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager < ManageIQ::Providers
   require_nested :RhvCredential
 
   require_nested :Workflow
+  require_nested :WorkflowNode
   require_nested :ConfigurationScript
   require_nested :ConfigurationScriptSource
   require_nested :ConfiguredSystem
