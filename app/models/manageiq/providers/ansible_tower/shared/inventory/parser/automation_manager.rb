@@ -5,8 +5,8 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
     configuration_scripts
     configuration_script_sources
     credentials
-    workflows
-    workflow_nodes
+    configuration_workflows
+    configuration_workflow_nodes
   end
 
   def inventory_root_groups
@@ -112,9 +112,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
     end
   end
 
-  def workflows
-    collector.workflow_job_templates.each do |job_template|
-      inventory_object = persister.workflows.find_or_build(job_template.id.to_s)
+  def configuration_workflows
+    collector.configuration_workflows.each do |job_template|
+      inventory_object = persister.configuration_workflows.find_or_build(job_template.id.to_s)
       inventory_object.description = job_template.description
       inventory_object.name = job_template.name
       inventory_object.survey_spec = job_template.survey_spec_hash
@@ -122,14 +122,14 @@ module ManageIQ::Providers::AnsibleTower::Shared::Inventory::Parser::AutomationM
     end
   end
 
-  def workflow_nodes
-    collector.workflow_job_template_nodes.each do |node|
-      inventory_object = persister.workflow_nodes.find_or_build(node.id.to_s)
-      inventory_object.workflow = persister.workflows.lazy_find(node.workflow_job_template_id.to_s)
+  def configuration_workflow_nodes
+    collector.configuration_workflow_nodes.each do |node|
+      inventory_object = persister.configuration_workflow_nodes.find_or_build(node.id.to_s)
+      inventory_object.configuration_workflow = persister.configuration_workflows.lazy_find(node.workflow_job_template_id.to_s)
       inventory_object.configuration_script = persister.configuration_scripts.lazy_find(node.unified_job_template_id)
       %w(success failure always).each do |condition|
         node.send("#{condition}_nodes_id").each do |child_id|
-          child_node = persister.workflow_nodes.find_or_build(child_id)
+          child_node = persister.configuration_workflow_nodes.find_or_build(child_id)
           child_node.parent = inventory_object
           child_node.conditions = condition
         end

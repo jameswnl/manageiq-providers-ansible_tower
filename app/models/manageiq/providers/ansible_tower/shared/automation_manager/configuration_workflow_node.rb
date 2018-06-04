@@ -1,4 +1,4 @@
-module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::WorkflowNode
+module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::ConfigurationWorkflowNode
   extend ActiveSupport::Concern
 
   include ProviderObjectMixin
